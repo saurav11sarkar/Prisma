@@ -7,20 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  user
-  admin
-}
-
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
   email     String
   role      Role     @default(user)
-  Profile   Profile?
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
+  age       Int      @default(0)
   Post      Post[]
+  Profile   Profile?
 
   @@map("users")
 }
@@ -29,9 +25,9 @@ model Profile {
   id        Int      @id @default(autoincrement())
   bio       String?
   userId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("profiles")
 }
@@ -42,10 +38,10 @@ model Post {
   content      String
   published    Boolean        @default(false)
   authorId     Int
-  author       User           @relation(fields: [authorId], references: [id])
   createAt     DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   PostCategory PostCategory[]
+  author       User           @relation(fields: [authorId], references: [id])
 
   @@map("posts")
 }
@@ -62,10 +58,15 @@ model Category {
 
 model PostCategory {
   postId     Int
-  post       Post     @relation(fields: [postId], references: [id])
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id])
 
   @@id([postId, categoryId])
   @@map("post_categories")
+}
+
+enum Role {
+  user
+  admin
 }
