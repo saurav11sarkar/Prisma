@@ -16,11 +16,12 @@ model User {
   id       String   @id @default(uuid())
   name     String
   email    String   @unique
-  password String
+  password String 
   role     Role     @default(user)
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
   Profile  Profile?
+  Book     Book[]
 }
 
 model Profile {
@@ -31,18 +32,6 @@ model Profile {
   user         User    @relation(fields: [userId], references: [id])
 }
 
-model Book {
-  id         String   @id @default(uuid())
-  title      String
-  authorId   String
-  author     Author   @relation(fields: [authorId], references: [id])
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  userId     String
-  createAt   DateTime @default(now())
-  updateAt   DateTime @updatedAt
-}
-
 model Author {
   id       String   @id @default(uuid())
   name     String
@@ -51,10 +40,34 @@ model Author {
   Book     Book[]
 }
 
+model Book {
+  id           String         @id @default(uuid())
+  title        String
+  authorId     String
+  author       Author         @relation(fields: [authorId], references: [id])
+  categoryId   String
+  category     Category       @relation(fields: [categoryId], references: [id])
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  createAt     DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
+  BookCategory BookCategory[]
+}
+
 model Category {
-  id       String   @id @default(uuid())
-  name     String
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-  Book     Book[]
+  id           String         @id @default(uuid())
+  name         String
+  createAt     DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
+  Book         Book[]
+  BookCategory BookCategory[]
+}
+
+model BookCategory {
+  bookId     String
+  book       Book     @relation(fields: [bookId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([bookId, categoryId])
 }
