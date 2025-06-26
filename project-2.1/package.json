@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/reletion-querys.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/loging.ts"
   },
   "license": "MIT",
   "devDependencies": {
